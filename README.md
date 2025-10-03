@@ -24,27 +24,35 @@ Each guardian is responsible for predicting its aspect of the weather. Terra orc
 
 ## 📂 Project Structure 
 
-/src
-/Controllers
-DrizzleController.cs
-HazeController.cs
-TerraController.cs
-BlazeController.cs
-GaleController.cs
-/Services
-DrizzleService.cs
-HazeService.cs
-BlazeService.cs
-GaleService.cs
-TerraAggregatorService.cs
-/Models
-GuardianResult.cs
-TerraResult.cs
-/Utils / Helpers
-(optional utility classes, e.g. for date handling, external API wrappers, etc.)
-Program.cs
-Startup.cs (or equivalent configuration)
-appsettings.json
+WeatherGuardiansAPI/
+│
+├── Controllers/              # Handles incoming API requests
+│   ├── DrizzleController.cs  # Rain-related endpoints
+│   ├── HazeController.cs     # Air quality endpoints
+│   ├── BlazeController.cs    # Heat/temperature endpoints
+│   ├── GaleController.cs     # Wind endpoints
+│   └── TerraController.cs    # Aggregates all guardians
+│
+├── Services/                 # Business logic for each guardian
+│   ├── DrizzleService.cs
+│   ├── HazeService.cs
+│   ├── BlazeService.cs
+│   ├── GaleService.cs
+│   └── TerraAggregatorService.cs
+│
+├── Models/                   # Data models
+│   ├── GuardianResult.cs     # Output of each guardian
+│   └── TerraResult.cs        # Final aggregated output
+│
+├── Properties/               # Project configs
+│   └── launchSettings.json
+│
+├── appsettings.json          # Main configuration file
+├── appsettings.Development.json
+├── Program.cs                # Entry point
+├── Startup.cs                # App configuration & middleware
+└── WeatherGuardiansAPI.csproj
+
 
 
 ---
