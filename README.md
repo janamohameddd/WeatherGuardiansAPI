@@ -64,6 +64,3 @@ appsettings.json
    ```bash
    git clone https://github.com/your-username/WeatherGuardiansAPI.git
    cd WeatherGuardiansAPI
-
-   📄 License & Credits
-
