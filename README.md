@@ -57,23 +57,23 @@ appsettings.json
 - (Optional) An external weather data API key if you are integrating with real weather data  
 - IDE or code editor (Visual Studio, Visual Studio Code, Rider, etc.)
 
-### Installation & Setup
+## Installation & Setup
 
-# 1. Clone the repository
+### 1. Clone the repository
 git clone https://github.com/your-username/WeatherGuardiansAPI.git
 cd WeatherGuardiansAPI
 
-# 2. Configure settings
-# Open appsettings.json (or appsettings.Development.json)
-# - Add your weather API key
-# - Set base URLs for external APIs if needed
-# - Adjust logging, ports, or other configuration
+### 2. Configure settings
+-Open appsettings.json (or appsettings.Development.json)
+-Add your weather API key
+-Set base URLs for external APIs if needed
+-Adjust logging, ports, or other configuration
 
-# 3. Build the project
+### 3. Build the project
 dotnet build
 
-# 4. Run the API
+### 4. Run the API
 dotnet run
 
-# 5. The API should now be running at:
-# http://localhost:5000
+### 5. The API should now be running at:
+http://localhost:5000
