@@ -1,13 +1,10 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
 using WeatherGuardiansAPI.Services;
+using WeatherGuardiansAPI.Models;
 
 namespace WeatherGuardiansAPI.Controllers
 {
-	/// <summary>
-	/// Controller for Blaze, the heat/sun guardian. Exposes endpoints to get today's
-	/// and future heat predictions.
-	/// </summary>
 	[ApiController]
 	[Route("blaze")]
 	[Produces("application/json")]
@@ -15,48 +12,84 @@ namespace WeatherGuardiansAPI.Controllers
 	{
 		private readonly IBlazeService _blazeService;
 
-		/// <summary>
-		/// Creates a new instance of <see cref="BlazeController"/>.
-		/// </summary>
-		/// <param name="blazeService">Injected heat/sun prediction service.</param>
 		public BlazeController(IBlazeService blazeService)
 		{
 			_blazeService = blazeService;
 		}
 
-		/// <summary>
-		/// Returns Blaze's heat/sun prediction for today.
-		/// </summary>
-		/// <returns>Prediction including date, temperatures in °C/°F, and a recommendation.</returns>
 		[HttpGet("today")]
-		public ActionResult<BlazePrediction> GetToday()
+		public ActionResult<GuardianResult> GetToday()
 		{
 			var prediction = _blazeService.GetBlazePrediction(DateTime.Today);
-			return Ok(prediction);
+			var result = MapToGuardianResult("Blaze", prediction);
+			return Ok(result);
 		}
 
-		/// <summary>
-		/// Returns Blaze's heat/sun prediction for a specific future (or past) date.
-		/// </summary>
-		/// <param name="year">Four-digit year.</param>
-		/// <param name="month">Month (1-12).</param>
-		/// <param name="day">Day (1-31, validated per month/year).</param>
-		/// <returns>Prediction including date, temperatures in °C/°F, and a recommendation.</returns>
 		[HttpGet("future/{year:int}/{month:int}/{day:int}")]
-		public ActionResult<BlazePrediction> GetFuture(int year, int month, int day)
+		public ActionResult<GuardianResult> GetFuture(int year, int month, int day)
 		{
 			try
 			{
 				var date = new DateTime(year, month, day);
 				var prediction = _blazeService.GetBlazePrediction(date);
-				return Ok(prediction);
+				var result = MapToGuardianResult("Blaze", prediction);
+				return Ok(result);
 			}
 			catch (ArgumentOutOfRangeException)
 			{
 				return BadRequest("Invalid date. Please provide a valid year, month, and day.");
 			}
 		}
+
+		private static GuardianResult MapToGuardianResult(string guardianName, BlazePrediction prediction)
+		{
+			var dateOnly = DateOnly.FromDateTime(prediction.Date);
+			double value = prediction.TemperatureC;
+			string unit = "°C";
+			string condition = GetTemperatureCondition(prediction.TemperatureC);
+			double confidence = GetDeterministicConfidence(dateOnly);
+			string description = "Temperature forecast (daily mean)";
+			string recommendation = prediction.Recommendation;
+			GuardianStatus status = GetTemperatureStatus(prediction.TemperatureC);
+
+			return new GuardianResult
+			{
+				GuardianName = guardianName,
+				Date = dateOnly,
+				PredictedValue = Math.Round(value, 2),
+				Unit = unit,
+				PredictedCondition = condition,
+				Confidence = Math.Round(confidence, 2),
+				Description = description,
+				Recommendation = recommendation,
+				Status = status
+			};
+		}
+
+		private static string GetTemperatureCondition(double c)
+		{
+			if (c < 0) return "Frigid";
+			if (c < 10) return "Chilly";
+			if (c < 20) return "Mild";
+			if (c < 27) return "Warm";
+			if (c < 32) return "Hot";
+			if (c < 38) return "Very Hot";
+			return "Extreme Heat";
+		}
+
+		private static GuardianStatus GetTemperatureStatus(double c)
+		{
+			if (c >= 38) return GuardianStatus.Red;
+			if (c >= 32 || c <= 0) return GuardianStatus.Yellow;
+			return GuardianStatus.Green;
+		}
+
+		private static double GetDeterministicConfidence(DateOnly date)
+		{
+			int seed = date.DayNumber * 13 + 5;
+			var r = new Random(seed);
+			return 0.6 + r.NextDouble() * 0.35;
+		}
 	}
 }
-
 

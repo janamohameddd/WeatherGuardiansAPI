@@ -11,12 +11,11 @@ public class DrizzleService : IDrizzleService
 {
 	public GuardianResult GetDrizzleForecast(DateOnly date)
 	{
-		// Deterministic pseudo-random based on date to keep results stable per day
 		var seed = date.DayNumber * 17 + 23;
 		var random = new Random(seed);
 
-		var probability = Math.Round(random.NextDouble(), 2); // 0.00 - 1.00
-		var intensity = random.Next(0, 3); // 0=none,1=light,2=moderate
+		var probability = Math.Round(random.NextDouble(), 2);
+		var intensity = random.Next(0, 3);
 
 		string condition = intensity switch
 		{

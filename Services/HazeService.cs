@@ -11,11 +11,9 @@ public class HazeService : IHazeService
 {
 	public GuardianResult GetHazeForecast(DateOnly date)
 	{
-		// Deterministic pseudo-random based on date
 		var seed = date.DayNumber * 31 + 7;
 		var random = new Random(seed);
 
-		// Simulate AQI 0-300
 		var aqi = random.Next(25, 201);
 		(string category, GuardianStatus status, string advice) = aqi switch
 		{

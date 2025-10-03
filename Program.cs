@@ -16,6 +16,7 @@ builder.Services.AddScoped<IGaleService, GaleService>();
 builder.Services.AddScoped<WeatherGuardiansAPI.Services.IDrizzleService, WeatherGuardiansAPI.Services.DrizzleService>();
 builder.Services.AddScoped<WeatherGuardiansAPI.Services.IHazeService, WeatherGuardiansAPI.Services.HazeService>();
 builder.Services.AddScoped<WeatherGuardiansAPI.Services.IHealthService, WeatherGuardiansAPI.Services.HealthService>();
+builder.Services.AddScoped<ITerraService, TerraService>();
 
 var app = builder.Build();
 

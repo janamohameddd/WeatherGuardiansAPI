@@ -1,13 +1,10 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
 using WeatherGuardiansAPI.Services;
+using WeatherGuardiansAPI.Models;
 
 namespace WeatherGuardiansAPI.Controllers
 {
-	/// <summary>
-	/// Controller for Gale, the wind guardian. Exposes endpoints to get today's
-	/// and future wind predictions.
-	/// </summary>
 	[ApiController]
 	[Route("gale")]
 	[Produces("application/json")]
@@ -15,48 +12,83 @@ namespace WeatherGuardiansAPI.Controllers
 	{
 		private readonly IGaleService _galeService;
 
-		/// <summary>
-		/// Creates a new instance of <see cref="GaleController"/>.
-		/// </summary>
-		/// <param name="galeService">Injected wind prediction service.</param>
 		public GaleController(IGaleService galeService)
 		{
 			_galeService = galeService;
 		}
 
-		/// <summary>
-		/// Returns Gale's wind prediction for today.
-		/// </summary>
-		/// <returns>Prediction including date, average wind, gusts, and a recommendation.</returns>
 		[HttpGet("today")]
-		public ActionResult<GalePrediction> GetToday()
+		public ActionResult<GuardianResult> GetToday()
 		{
 			var prediction = _galeService.GetGalePrediction(DateTime.Today);
-			return Ok(prediction);
+			var result = MapToGuardianResult("Gale", prediction);
+			return Ok(result);
 		}
 
-		/// <summary>
-		/// Returns Gale's wind prediction for a specific future (or past) date.
-		/// </summary>
-		/// <param name="year">Four-digit year.</param>
-		/// <param name="month">Month (1-12).</param>
-		/// <param name="day">Day (1-31, validated per month/year).</param>
-		/// <returns>Prediction including date, average wind, gusts, and a recommendation.</returns>
 		[HttpGet("future/{year:int}/{month:int}/{day:int}")]
-		public ActionResult<GalePrediction> GetFuture(int year, int month, int day)
+		public ActionResult<GuardianResult> GetFuture(int year, int month, int day)
 		{
 			try
 			{
 				var date = new DateTime(year, month, day);
 				var prediction = _galeService.GetGalePrediction(date);
-				return Ok(prediction);
+				var result = MapToGuardianResult("Gale", prediction);
+				return Ok(result);
 			}
 			catch (ArgumentOutOfRangeException)
 			{
 				return BadRequest("Invalid date. Please provide a valid year, month, and day.");
 			}
 		}
+
+		private static GuardianResult MapToGuardianResult(string guardianName, GalePrediction prediction)
+		{
+			var dateOnly = DateOnly.FromDateTime(prediction.Date);
+			double value = prediction.AverageWindSpeedKmH;
+			string unit = "km/h";
+			string condition = GetWindCondition(prediction.AverageWindSpeedKmH, prediction.GustKmH);
+			double confidence = GetDeterministicConfidence(dateOnly);
+			string description = "Average wind speed forecast";
+			string recommendation = prediction.Recommendation;
+			GuardianStatus status = GetWindStatus(prediction.AverageWindSpeedKmH, prediction.GustKmH);
+
+			return new GuardianResult
+			{
+				GuardianName = guardianName,
+				Date = dateOnly,
+				PredictedValue = Math.Round(value, 2),
+				Unit = unit,
+				PredictedCondition = condition,
+				Confidence = Math.Round(confidence, 2),
+				Description = description,
+				Recommendation = recommendation,
+				Status = status
+			};
+		}
+
+		private static string GetWindCondition(double avg, double gust)
+		{
+			if (avg < 5) return "Calm";
+			if (avg < 15) return "Light breeze";
+			if (avg < 30) return gust > 45 ? "Breezy, gusty" : "Moderate breeze";
+			if (avg < 50) return "Strong";
+			if (avg < 70) return "Very strong";
+			return "Damaging";
+		}
+
+		private static GuardianStatus GetWindStatus(double avg, double gust)
+		{
+			if (avg >= 50 || gust >= 70) return GuardianStatus.Red;
+			if (avg >= 30) return GuardianStatus.Yellow;
+			return GuardianStatus.Green;
+		}
+
+		private static double GetDeterministicConfidence(DateOnly date)
+		{
+			int seed = date.DayNumber * 29 + 17;
+			var r = new Random(seed);
+			return 0.55 + r.NextDouble() * 0.4;
+		}
 	}
 }
-
 
