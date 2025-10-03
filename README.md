@@ -23,7 +23,7 @@ Each guardian is responsible for predicting its aspect of the weather. Terra orc
 ---
 
 ## 📂 Project Structure 
-
+```bash
 WeatherGuardiansAPI/
 │
 ├── Controllers/              # Handles incoming API requests
@@ -52,10 +52,7 @@ WeatherGuardiansAPI/
 ├── Program.cs                # Entry point
 ├── Startup.cs                # App configuration & middleware
 └── WeatherGuardiansAPI.csproj
-
-
-
----
+```
 
 ## 🚀 Getting Started
 
@@ -68,9 +65,10 @@ WeatherGuardiansAPI/
 ## Installation & Setup
 
 ### 1. Clone the repository
+```bash
 git clone https://github.com/your-username/WeatherGuardiansAPI.git
 cd WeatherGuardiansAPI
-
+```
 ### 2. Configure settings
 -Open appsettings.json (or appsettings.Development.json)
 -Add your weather API key
@@ -78,10 +76,14 @@ cd WeatherGuardiansAPI
 -Adjust logging, ports, or other configuration
 
 ### 3. Build the project
+```bash
 dotnet build
-
+```
 ### 4. Run the API
+```bash
 dotnet run
-
+```
 ### 5. The API should now be running at:
+```bash
 http://localhost:5000
+```
