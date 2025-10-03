@@ -1,39 +1,62 @@
-namespace WeatherGuardiansAPI.Controllers;
-
+using System;
 using Microsoft.AspNetCore.Mvc;
-using WeatherGuardiansAPI.Models;
+using WeatherGuardiansAPI.Services;
 
-[ApiController]
-[Route("api/blaze")]
-public class BlazeController : ControllerBase
+namespace WeatherGuardiansAPI.Controllers
 {
-    // GET api/blaze/{date}
-    [HttpGet("{date}")]
-    public ActionResult<GuardianResult> GetByDate([FromRoute] DateOnly date)
-    {
-        // Mock logic: deterministic pseudo-random based on date
-        var seed = date.DayNumber;
-        var random = new Random(seed);
+	/// <summary>
+	/// Controller for Blaze, the heat/sun guardian. Exposes endpoints to get today's
+	/// and future heat predictions.
+	/// </summary>
+	[ApiController]
+	[Route("blaze")]
+	[Produces("application/json")]
+	public sealed class BlazeController : ControllerBase
+	{
+		private readonly IBlazeService _blazeService;
 
-        var temperatureC = Math.Round(random.NextDouble() * 25 + 5, 1); // 5C to 30C
-        var status = temperatureC >= 28 ? GuardianStatus.Red : GuardianStatus.Green;
-        var description = status == GuardianStatus.Green
-            ? "Comfortable temperatures expected."
-            : "High heat risk. Stay hydrated and limit strenuous activity.";
+		/// <summary>
+		/// Creates a new instance of <see cref="BlazeController"/>.
+		/// </summary>
+		/// <param name="blazeService">Injected heat/sun prediction service.</param>
+		public BlazeController(IBlazeService blazeService)
+		{
+			_blazeService = blazeService;
+		}
 
-        var result = new GuardianResult
-        {
-            GuardianName = "Blaze",
-            Date = date,
-            PredictedValue = temperatureC,
-            Unit = "C",
-            Description = description,
-            Status = status
-        };
+		/// <summary>
+		/// Returns Blaze's heat/sun prediction for today.
+		/// </summary>
+		/// <returns>Prediction including date, temperatures in °C/°F, and a recommendation.</returns>
+		[HttpGet("today")]
+		public ActionResult<BlazePrediction> GetToday()
+		{
+			var prediction = _blazeService.GetBlazePrediction(DateTime.Today);
+			return Ok(prediction);
+		}
 
-        return Ok(result);
-    }
+		/// <summary>
+		/// Returns Blaze's heat/sun prediction for a specific future (or past) date.
+		/// </summary>
+		/// <param name="year">Four-digit year.</param>
+		/// <param name="month">Month (1-12).</param>
+		/// <param name="day">Day (1-31, validated per month/year).</param>
+		/// <returns>Prediction including date, temperatures in °C/°F, and a recommendation.</returns>
+		[HttpGet("future/{year:int}/{month:int}/{day:int}")]
+		public ActionResult<BlazePrediction> GetFuture(int year, int month, int day)
+		{
+			try
+			{
+				var date = new DateTime(year, month, day);
+				var prediction = _blazeService.GetBlazePrediction(date);
+				return Ok(prediction);
+			}
+			catch (ArgumentOutOfRangeException)
+			{
+				return BadRequest("Invalid date. Please provide a valid year, month, and day.");
+			}
+		}
+	}
 }
-
 
 

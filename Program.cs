@@ -1,17 +1,18 @@
-// OpenAPI/Swagger not configured to avoid missing package errors
+using WeatherGuardiansAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// builder.Services.AddEndpointsApiExplorer();
 
-// Add controllers and configure enums to be serialized as strings
+// Add controllers for attribute-routed APIs (e.g., BlazeController)
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
 });
 
-// Dependency Injection for new services
+// Register application services
+builder.Services.AddScoped<IBlazeService, BlazeService>();
+builder.Services.AddScoped<IGaleService, GaleService>();
 builder.Services.AddScoped<WeatherGuardiansAPI.Services.IDrizzleService, WeatherGuardiansAPI.Services.DrizzleService>();
 builder.Services.AddScoped<WeatherGuardiansAPI.Services.IHazeService, WeatherGuardiansAPI.Services.HazeService>();
 builder.Services.AddScoped<WeatherGuardiansAPI.Services.IHealthService, WeatherGuardiansAPI.Services.HealthService>();
@@ -19,11 +20,6 @@ builder.Services.AddScoped<WeatherGuardiansAPI.Services.IHealthService, WeatherG
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-// if (app.Environment.IsDevelopment())
-// {
-//     app.UseSwagger();
-//     app.UseSwaggerUI();
-// }
 
 app.UseHttpsRedirection();
 

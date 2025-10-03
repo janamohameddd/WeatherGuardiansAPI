@@ -16,6 +16,7 @@ C:\Users\janae\OneDrive\Documents\WeatherGuardiansAPI\WeatherGuardiansAPI\obj\De
 C:\Users\janae\OneDrive\Documents\WeatherGuardiansAPI\WeatherGuardiansAPI\obj\Debug\net9.0\WeatherGuardiansAPI.csproj.CoreCompileInputs.cache
 C:\Users\janae\OneDrive\Documents\WeatherGuardiansAPI\WeatherGuardiansAPI\obj\Debug\net9.0\WeatherGuardiansAPI.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\janae\OneDrive\Documents\WeatherGuardiansAPI\WeatherGuardiansAPI\obj\Debug\net9.0\WeatherGuardiansAPI.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\janae\OneDrive\Documents\WeatherGuardiansAPI\WeatherGuardiansAPI\obj\Debug\net9.0\WeatherGuardiansAPI.sourcelink.json
 C:\Users\janae\OneDrive\Documents\WeatherGuardiansAPI\WeatherGuardiansAPI\obj\Debug\net9.0\rjimswa.dswa.cache.json
 C:\Users\janae\OneDrive\Documents\WeatherGuardiansAPI\WeatherGuardiansAPI\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
 C:\Users\janae\OneDrive\Documents\WeatherGuardiansAPI\WeatherGuardiansAPI\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
