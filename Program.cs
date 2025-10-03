@@ -14,6 +14,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 // Dependency Injection for new services
 builder.Services.AddScoped<WeatherGuardiansAPI.Services.IDrizzleService, WeatherGuardiansAPI.Services.DrizzleService>();
 builder.Services.AddScoped<WeatherGuardiansAPI.Services.IHazeService, WeatherGuardiansAPI.Services.HazeService>();
+builder.Services.AddScoped<WeatherGuardiansAPI.Services.IHealthService, WeatherGuardiansAPI.Services.HealthService>();
 
 var app = builder.Build();
 
