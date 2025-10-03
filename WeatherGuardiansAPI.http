@@ -1,0 +1,18 @@
+@WeatherGuardiansAPI_HostAddress = http://localhost:5244
+
+GET {{WeatherGuardiansAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+# Blaze guardian: provide a date as YYYY-MM-DD
+GET {{WeatherGuardiansAPI_HostAddress}}/api/blaze/2025-10-05
+Accept: application/json
+
+###
+
+# Terra combined summary for a date
+GET {{WeatherGuardiansAPI_HostAddress}}/api/terra/2025-10-05
+Accept: application/json
+
+###

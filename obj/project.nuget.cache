@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "VMffZyVsi10=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\janae\\OneDrive\\Documents\\WeatherGuardiansAPI\\WeatherGuardiansAPI\\WeatherGuardiansAPI.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\janae\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.9\\microsoft.aspnetcore.openapi.9.0.9.nupkg.sha512",
+    "C:\\Users\\janae\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
