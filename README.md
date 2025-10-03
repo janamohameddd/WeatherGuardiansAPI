@@ -58,8 +58,7 @@ WeatherGuardiansAPI/
 
 ### Prerequisites
 
-- .NET SDK (version X.Y or higher)  
-- (Optional) An external weather data API key if you are integrating with real weather data  
+- .NET SDK 
 - IDE or code editor (Visual Studio, Visual Studio Code, Rider, etc.)
 
 ## Installation & Setup
